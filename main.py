@@ -3,7 +3,7 @@ from typing import Optional
 from type import WeightedGraph, Location, GridLocation
 from queue import PriorityQueue
 from grid_graph import GridWithWeights, reconstruct_path
-from draw import draw_grid
+from draw import draw_grid, DIAGRAM1_WALLS
 
 
 def heuristic(a: GridLocation, b: GridLocation) -> float:
@@ -37,12 +37,12 @@ def a_star_search(graph: WeightedGraph, start: Location, goal: Location):
     return came_from, cost_so_far
 
 
-diagram4 = GridWithWeights(15, 15)
-start, goal = (1, 4), (8, 3)
+diagram4 = GridWithWeights(30, 15)
+diagram4.walls = DIAGRAM1_WALLS
+start, goal = (1, 4), (25, 2)
 came_from, cost_so_far = a_star_search(diagram4, start, goal)
 draw_grid(diagram4, point_to=came_from, start=start, goal=goal)
 print()
 path = reconstruct_path(came_from, start=start, goal=goal)
 draw_grid(diagram4, path=path)
-print(path)
 
