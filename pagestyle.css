@@ -1,0 +1,11 @@
+.main {
+    display: flex;
+}
+
+#demo {
+ flex: 80%;
+}
+
+#input-container {
+    flex: 20%;
+}
