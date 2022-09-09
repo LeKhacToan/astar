@@ -6,6 +6,7 @@ const scale = 10;
 let root = d3.select("#demo svg");
 let A = { x: 0, y: 0 };
 let B = { x: 0, y: 0 };
+let path = [];
 
 const drawGrid = () => {
   for (let x = 0; x < 50; x++) {
@@ -27,8 +28,8 @@ function highlightReact(A) {
   root
     .append("rect")
     .attr("transform", `translate(${x * scale}, ${y * scale})`)
-    .attr("width", scale - 1)
-    .attr("height", scale - 1)
+    .attr("width", scale)
+    .attr("height", scale)
     .attr("fill", fill);
 }
 
@@ -69,9 +70,35 @@ function findPath() {
     .then((response) => response.json())
     .then((data) => {
       const points = data.data;
-      points.forEach((element) => {
-        const item = { ...element, fill: "hsl(192, 100%, 50%)" };
-        highlightReact(item);
+      path = points;
+      points.forEach((element, index) => {
+        if (index !== 0 && index < points.length - 1) {
+          const item = { ...element, fill: "hsl(192, 100%, 50%)" };
+          highlightReact(item);
+        }
       });
     });
+}
+
+function move() {
+  let circle = root
+    .append("circle")
+    .attr("r", scale * 0.75)
+    .attr("fill", "hsl(0,50%,50%)")
+    .attr(
+      "transform",
+      `translate(${(A.x + 0.5) * scale} ${(A.y + 0.5) * scale})`
+    );
+  path.forEach((item, index) => {
+    if (index !== 0) {
+      circle = circle
+        .transition()
+        .ease(d3.easeLinear) 
+        .attr(
+          "transform",
+          `translate(${(item.x + 0.5) * scale} ${(item.y + 0.5) * scale})`
+        )
+        .duration(100);
+    }
+  });
 }
